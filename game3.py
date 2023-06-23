@@ -121,12 +121,13 @@ while running:
             towers.append(tower)
             player.gold -= 10
 
-    # Move enemies
-    for enemy in enemies:
-        enemy.move()
-        if enemy.reached_end():
-            player.lives -= 1
-            enemies.remove(enemy)
+    # Move enemies if the player has remaining lives
+    if player.lives > 0:
+        for enemy in enemies:
+            enemy.move()
+            if enemy.reached_end():
+                player.lives -= 1
+                enemies.remove(enemy)
 
     # Update towers
     for tower in towers:
