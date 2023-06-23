@@ -2,6 +2,8 @@ import pygame
 import random
 import math
 
+ENEMY_START_HEALTH = 10
+
 # Initialize Pygame
 pygame.init()
 
@@ -38,11 +40,11 @@ class Player:
 
 # Enemy class
 class Enemy:
-    def __init__(self):
+    def __init__(self, max_health: int):
         self.width = 20
         self.height = 20
         self.vel = 2
-        self.max_health = 10
+        self.max_health = max_health
         self.reset()
 
     def move(self):
@@ -127,9 +129,9 @@ running = True
 clock = pygame.time.Clock()
 
 def start_new_level():
-    for i in range(player.level):
-        enemy = Enemy()
-        enemies.append(enemy)
+    enemy = Enemy(ENEMY_START_HEALTH + (player.level - 1) * 5)
+    enemies.append(enemy)
+
 
 def check_collisions():
     for bullet in bullets:
