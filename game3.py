@@ -127,23 +127,26 @@ running = True
 clock = pygame.time.Clock()
 
 def start_new_level():
-    player.level += 1
-    player.gold += 10
     for i in range(player.level):
         enemy = Enemy()
         enemies.append(enemy)
 
 def check_collisions():
     for bullet in bullets:
+        enemy_killed = False  # Track if an enemy has been killed
         for enemy in enemies:
             if collision_detection(bullet, enemy):
                 enemy.health -= bullet.damage
                 bullets.remove(bullet)
                 if enemy.health <= 0:
                     enemies.remove(enemy)
+                    enemy_killed = True  # Set the flag to indicate an enemy has been killed
                     if not enemies:
+                        player.level += 1  # Increment level when all enemies are eliminated
                         start_new_level()
                 break
+        if enemy_killed:
+            player.gold += 50  # Give the player 50 gold when an enemy is killed
 
 def collision_detection(bullet, enemy):
     distance = math.sqrt((bullet.x - enemy.x) ** 2 + (bullet.y - enemy.y) ** 2)
