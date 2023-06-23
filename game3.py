@@ -35,12 +35,11 @@ class Player:
 # Enemy class
 class Enemy:
     def __init__(self):
-        self.x = 0
-        self.y = HEIGHT // 2
         self.width = 20
         self.height = 20
         self.vel = 2
         self.health = 10
+        self.reset()
 
     def move(self):
         self.x += self.vel
@@ -50,6 +49,10 @@ class Enemy:
 
     def reached_end(self):
         return self.x >= WIDTH
+
+    def reset(self):
+        self.x = 0
+        self.y = HEIGHT // 2
 
 # Bullet class
 class Bullet:
@@ -100,7 +103,7 @@ class Tower:
 
 # Create objects
 player = Player()
-enemies = [Enemy()]
+enemies = []
 towers = []
 bullets = []
 
@@ -128,6 +131,11 @@ while running:
             if enemy.reached_end():
                 player.lives -= 1
                 enemies.remove(enemy)
+
+        # Add new enemy when necessary
+        if not enemies:
+            enemy = Enemy()
+            enemies.append(enemy)
 
     # Update towers
     for tower in towers:
