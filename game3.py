@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 # Initialize Pygame
 pygame.init()
@@ -56,18 +57,26 @@ class Enemy:
 
 # Bullet class
 class Bullet:
-    def __init__(self, x, y):
+    def __init__(self, x, y, target_x, target_y):
         self.x = x
         self.y = y
         self.radius = 5
         self.color = WHITE
-        self.vel = 5
+        self.speed = 5
+        self.target_x = target_x
+        self.target_y = target_y
+        self.dx = self.target_x - self.x
+        self.dy = self.target_y - self.y
+        self.distance = math.sqrt(self.dx ** 2 + self.dy ** 2)
+        self.vx = (self.dx / self.distance) * self.speed
+        self.vy = (self.dy / self.distance) * self.speed
 
     def move(self):
-        self.x += self.vel
+        self.x += self.vx
+        self.y += self.vy
 
     def draw(self):
-        pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
+        pygame.draw.circle(win, self.color, (int(self.x), int(self.y)), self.radius)
 
 # Tower class
 class Tower:
@@ -86,7 +95,7 @@ class Tower:
 
     def shoot(self, enemy):
         if self.can_shoot and self.is_within_range(enemy):
-            bullet = Bullet(self.x + self.width // 2, self.y + self.height // 2)
+            bullet = Bullet(self.x + self.width // 2, self.y + self.height // 2, enemy.x, enemy.y)
             bullets.append(bullet)
             self.can_shoot = False
 
