@@ -50,6 +50,8 @@ class Enemy:
 
     def draw(self):
         pygame.draw.rect(win, RED, (self.x, self.y, self.width, self.height))
+        health_bar_width = self.width * (self.health / self.max_health)
+        pygame.draw.rect(win, GREEN, (self.x, self.y - 10, health_bar_width, 5))
 
     def reached_end(self):
         return self.x >= WIDTH
