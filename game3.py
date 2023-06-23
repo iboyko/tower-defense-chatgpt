@@ -134,10 +134,6 @@ enemies = []
 towers = []
 bullets = []
 
-# Game loop
-running = True
-clock = pygame.time.Clock()
-
 
 def start_new_level():
     enemy = Enemy(ENEMY_START_HEALTH + (player.level - 1) * 5)
@@ -167,6 +163,24 @@ def collision_detection(bullet, enemy):
     return distance <= bullet.radius + enemy.width
 
 
+def show_lose_message():
+    # Clear the screen
+    win.fill((0, 0, 0))
+
+    # Display the lose message
+    font = pygame.font.Font(None, 50)
+    text = font.render("You lose!", True, RED)
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    win.blit(text, text_rect)
+
+    # Update the display
+    pygame.display.update()
+
+# Game loop
+running = True
+clock = pygame.time.Clock()
+game_over = False
+
 while running:
     clock.tick(60)  # Frame rate
 
@@ -191,6 +205,13 @@ while running:
         # Add new enemy when necessary
         if not enemies:
             start_new_level()
+    else:
+        # Player has lost, set game_over flag to True
+        game_over = True
+
+    if game_over:
+        # Display lose message, but continue the game loop
+        show_lose_message()
 
     # Update towers
     for tower in towers:
