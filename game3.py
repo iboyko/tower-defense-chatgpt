@@ -152,22 +152,6 @@ def collision_detection(bullet, enemy):
     distance = math.sqrt((bullet.x - enemy.x) ** 2 + (bullet.y - enemy.y) ** 2)
     return distance <= bullet.radius + enemy.width
 
-
-def draw():
-    global enemy, tower, bullet
-    # Draw enemies
-    for enemy in enemies:
-        enemy.draw()
-    # Draw towers
-    for tower in towers:
-        tower.draw()
-    # Draw bullets
-    for bullet in bullets:
-        bullet.draw()
-    # Draw player stats
-    player.draw()
-
-
 while running:
     clock.tick(60)  # Frame rate
 
@@ -212,7 +196,20 @@ while running:
     # Draw the game window
     win.fill((0, 0, 0))  # Clear the screen
 
-    draw()
+    # Draw enemies
+    for enemy in enemies:
+        enemy.draw()
+
+    # Draw towers
+    for tower in towers:
+        tower.draw()
+
+    # Draw bullets
+    for bullet in bullets:
+        bullet.draw()
+
+    # Draw player stats
+    player.draw()
 
     # Update the game window
     pygame.display.update()
