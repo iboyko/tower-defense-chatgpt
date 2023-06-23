@@ -1,6 +1,6 @@
-import pygame
-import random
 import math
+
+import pygame
 
 ENEMY_START_HEALTH = 10
 
@@ -20,6 +20,7 @@ GREEN = (0, 255, 0)
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Tower Defense")
 
+
 # Player class
 class Player:
     def __init__(self):
@@ -37,6 +38,7 @@ class Player:
         win.blit(lives_text, (10, 10))
         win.blit(gold_text, (10, 40))
         win.blit(level_text, (10, 70))
+
 
 # Enemy class
 class Enemy:
@@ -68,6 +70,7 @@ class Enemy:
         self.y = HEIGHT // 2
         self.health = self.max_health
 
+
 # Bullet class
 class Bullet:
     def __init__(self, x, y, target_x, target_y):
@@ -91,6 +94,7 @@ class Bullet:
 
     def draw(self):
         pygame.draw.circle(win, self.color, (int(self.x), int(self.y)), self.radius)
+
 
 # Tower class
 class Tower:
@@ -123,6 +127,7 @@ class Tower:
                 self.can_shoot = True
                 self.cooldown = 60  # Reset the cooldown
 
+
 # Create objects
 player = Player()
 enemies = []
@@ -132,6 +137,7 @@ bullets = []
 # Game loop
 running = True
 clock = pygame.time.Clock()
+
 
 def start_new_level():
     enemy = Enemy(ENEMY_START_HEALTH + (player.level - 1) * 5)
@@ -155,9 +161,11 @@ def check_collisions():
         if enemy_killed:
             player.gold += 50  # Give the player 50 gold when an enemy is killed
 
+
 def collision_detection(bullet, enemy):
     distance = math.sqrt((bullet.x - enemy.x) ** 2 + (bullet.y - enemy.y) ** 2)
     return distance <= bullet.radius + enemy.width
+
 
 while running:
     clock.tick(60)  # Frame rate
