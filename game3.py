@@ -124,6 +124,9 @@ while running:
     # Move enemies
     for enemy in enemies:
         enemy.move()
+        if enemy.reached_end():
+            player.lives -= 1
+            enemies.remove(enemy)
 
     # Update towers
     for tower in towers:
