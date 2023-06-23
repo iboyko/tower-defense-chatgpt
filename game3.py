@@ -18,11 +18,13 @@ GREEN = (0, 255, 0)
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Tower Defense")
 
+
 # Player class
 class Player:
     def __init__(self):
         self.lives = 5
         self.gold = 100
+        self.level = 1
 
         # Load font
         self.font = pygame.font.Font(None, 30)
@@ -30,8 +32,11 @@ class Player:
     def draw(self):
         lives_text = self.font.render(f"Lives: {self.lives}", True, WHITE)
         gold_text = self.font.render(f"Gold: {self.gold}", True, WHITE)
+        level_text = self.font.render(f"Level: {self.level}", True, WHITE)
         win.blit(lives_text, (10, 10))
         win.blit(gold_text, (10, 40))
+        win.blit(level_text, (10, 70))
+
 
 # Enemy class
 class Enemy:
@@ -39,7 +44,7 @@ class Enemy:
         self.width = 20
         self.height = 20
         self.vel = 2
-        self.health = 10
+        self.max_health = 10
         self.reset()
 
     def move(self):
@@ -54,6 +59,8 @@ class Enemy:
     def reset(self):
         self.x = 0
         self.y = HEIGHT // 2
+        self.health = self.max_health
+
 
 # Bullet class
 class Bullet:
@@ -77,6 +84,7 @@ class Bullet:
 
     def draw(self):
         pygame.draw.circle(win, self.color, (int(self.x), int(self.y)), self.radius)
+
 
 # Tower class
 class Tower:
@@ -110,6 +118,7 @@ class Tower:
                 self.can_shoot = True
                 self.cooldown = 60  # Reset the cooldown
 
+
 # Create objects
 player = Player()
 enemies = []
@@ -119,6 +128,33 @@ bullets = []
 # Game loop
 running = True
 clock = pygame.time.Clock()
+
+
+def start_new_level():
+    player.level += 1
+    player.gold += 10
+    for i in range(player.level):
+        enemy = Enemy()
+        enemies.append(enemy)
+
+
+def check_collisions():
+    for bullet in bullets:
+        for enemy in enemies:
+            if collision_detection(bullet, enemy):
+                enemy.health -= bullet.damage
+                bullets.remove(bullet)
+                if enemy.health <= 0:
+                    enemies.remove(enemy)
+                    if not enemies:
+                        start_new_level()
+                break
+
+
+def collision_detection(bullet, enemy):
+    distance = math.sqrt((bullet.x - enemy.x) ** 2 + (bullet.y - enemy.y) ** 2)
+    return distance <= bullet.radius + enemy.width
+
 
 while running:
     clock.tick(60)  # Frame rate
@@ -143,8 +179,7 @@ while running:
 
         # Add new enemy when necessary
         if not enemies:
-            enemy = Enemy()
-            enemies.append(enemy)
+            start_new_level()
 
     # Update towers
     for tower in towers:
@@ -155,6 +190,9 @@ while running:
     # Move bullets
     for bullet in bullets:
         bullet.move()
+
+    # Check collisions
+    check_collisions()
 
     # Remove bullets that are off-screen
     bullets = [bullet for bullet in bullets if bullet.x <= WIDTH]
