@@ -18,7 +18,6 @@ GREEN = (0, 255, 0)
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Tower Defense")
 
-
 # Player class
 class Player:
     def __init__(self):
@@ -36,7 +35,6 @@ class Player:
         win.blit(lives_text, (10, 10))
         win.blit(gold_text, (10, 40))
         win.blit(level_text, (10, 70))
-
 
 # Enemy class
 class Enemy:
@@ -61,7 +59,6 @@ class Enemy:
         self.y = HEIGHT // 2
         self.health = self.max_health
 
-
 # Bullet class
 class Bullet:
     def __init__(self, x, y, target_x, target_y):
@@ -77,6 +74,7 @@ class Bullet:
         self.distance = math.sqrt(self.dx ** 2 + self.dy ** 2)
         self.vx = (self.dx / self.distance) * self.speed
         self.vy = (self.dy / self.distance) * self.speed
+        self.damage = 1
 
     def move(self):
         self.x += self.vx
@@ -84,7 +82,6 @@ class Bullet:
 
     def draw(self):
         pygame.draw.circle(win, self.color, (int(self.x), int(self.y)), self.radius)
-
 
 # Tower class
 class Tower:
@@ -94,7 +91,6 @@ class Tower:
         self.width = 50
         self.height = 50
         self.range = 150
-        self.damage = 1
         self.cooldown = 60  # 1 second cooldown at 60 frames per second
         self.can_shoot = True
 
@@ -118,7 +114,6 @@ class Tower:
                 self.can_shoot = True
                 self.cooldown = 60  # Reset the cooldown
 
-
 # Create objects
 player = Player()
 enemies = []
@@ -129,14 +124,12 @@ bullets = []
 running = True
 clock = pygame.time.Clock()
 
-
 def start_new_level():
     player.level += 1
     player.gold += 10
     for i in range(player.level):
         enemy = Enemy()
         enemies.append(enemy)
-
 
 def check_collisions():
     for bullet in bullets:
@@ -150,11 +143,9 @@ def check_collisions():
                         start_new_level()
                 break
 
-
 def collision_detection(bullet, enemy):
     distance = math.sqrt((bullet.x - enemy.x) ** 2 + (bullet.y - enemy.y) ** 2)
     return distance <= bullet.radius + enemy.width
-
 
 while running:
     clock.tick(60)  # Frame rate
